@@ -126,5 +126,34 @@ public class AlphabetTests {
 		Assertions.assertDoesNotThrow(caller);
 	} // constructor_ordinarySize_notThrow()
 
+	/**
+	 * Конструктор устанавливает указанный начальный символ.
+	 */
+	@Test
+	public void constructor_selectedAlphaIsSet (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final int size = rng.nextInt(128) + 1;
+		// act
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		// assert
+		Assertions.assertEquals(alpha, alphabet.alpha());
+	} // constructor_selectedAlphaIsSet()
+
+	/**
+	 * Конструктор устанавливает указанный размер алфавита.
+	 */
+	@Test
+	public void constructor_selectedSizeIsSet (
+	) { // method body
+		// arrange
+		final int size = rng.nextInt(Alphabet.MAX_ALPHABET_SIZE) + 1;
+		// act
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		// assert
+		Assertions.assertEquals(size, alphabet.size());
+	} // constructor_selectedSizeIsSet()
+
 	// todo
 } // AlphabetTests

@@ -10,6 +10,17 @@ package i2p.realmagic.cipher.caesar;
  * Размер превышает единицу, но меньше максимального. Не выбрасывает исключений.
  */
 
+/*
+ Тесты метода isValidChar:
+ * Символ предшествует алфавиту. Ожидания: false.
+ * Символ следует за алфавитом. Ожидания: false.
+ * Алфавит не пересекает границу типа char. Символ внутри алфавита. Ожидания: true.
+ * Алфавит пересекает границу типа char. Символ внутри алфавита, до границы. Ожидания: true.
+ * Алфавит пересекает границу типа char. Символ внутри алфавита, после границы. Ожидания: true.
+ * Алфавит пересекает границу типа char. Символ вне алфавита. Ожидания: false.
+ * Алфавит включает все символы типа char. Любой случайный символ. Ожидания: true.
+ */
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -154,6 +165,124 @@ public class AlphabetTests {
 		// assert
 		Assertions.assertEquals(size, alphabet.size());
 	} // constructor_selectedSizeIsSet()
+
+	/**
+	 * Символ предшествует алфавиту. Ожидания: false.
+	 */
+	@Test
+	public void isValidChar_chPrecedesAlphabet_returnsFalse (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(1, Alphabet.MAX_ALPHABET_SIZE);
+		final int size = rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - alpha) + 1;
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) rng.nextInt(alpha);
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertFalse(isValidChar, "Символ предшествует алфавиту. Ожидания: false.");
+	} // isValidChar_chPrecedesAlphabet_returnsFalse()
+
+	/**
+	 * Символ следует за алфавитом. Ожидания: false.
+	 */
+	@Test
+	public void isValidChar_chFollowsAlphabet_returnsFalse (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - 1);
+		final int size = rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - 1 - alpha) + 1;
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) rng.nextInt(alpha + size, Alphabet.MAX_ALPHABET_SIZE);
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertFalse(isValidChar, "Символ следует за алфавитом. Ожидания: false.");
+	} // isValidChar_chFollowsAlphabet_returnsFalse()
+
+	/**
+	 * Алфавит не пересекает границу типа char. Символ внутри алфавита. Ожидания: true.
+	 */
+	@Test
+	public void isValidChar_chIsInAlphabet_returnsTrue (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE);
+		final int size = rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - alpha) + 1;
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) (alpha + rng.nextInt(size));
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertTrue(isValidChar, "Алфавит не пересекает границу типа char. Символ внутри алфавита. Ожидания: true.");
+	} // isValidChar_chIsInAlphabet_returnsTrue()
+
+	/**
+	 * Алфавит пересекает границу типа char. Символ внутри алфавита, до границы. Ожидания: true.
+	 */
+	@Test
+	public void isValidChar_chBeforeCharTypeBound_returnsTrue (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2, Alphabet.MAX_ALPHABET_SIZE);
+		final int size = rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - alpha + 1, Alphabet.MAX_ALPHABET_SIZE);
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) (alpha + rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - alpha));
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertTrue(isValidChar, "Алфавит пересекает границу типа char. Символ внутри алфавита, до границы. Ожидания: true.");
+	} // isValidChar_chBeforeCharTypeBound_returnsTrue()
+
+	/**
+	 * Алфавит пересекает границу типа char. Символ внутри алфавита, после границы. Ожидания: true.
+	 */
+	@Test
+	public void isValidChar_chAfterCharTypeBound_returnsTrue (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2, Alphabet.MAX_ALPHABET_SIZE);
+		final int size = rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - alpha + 1, Alphabet.MAX_ALPHABET_SIZE);
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) rng.nextInt(size - (Alphabet.MAX_ALPHABET_SIZE - alpha));
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertTrue(isValidChar, "Алфавит пересекает границу типа char. Символ внутри алфавита, после границы. Ожидания: true.");
+	} // isValidChar_chAfterCharTypeBound_returnsTrue()
+
+	/**
+	 * Алфавит пересекает границу типа char. Символ вне алфавита. Ожидания: false.
+	 */
+	@Test
+	public void isValidChar_chOutsideAlphabet_returnsFalse (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2, Alphabet.MAX_ALPHABET_SIZE);
+		final int size = rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - alpha + 1, Alphabet.MAX_ALPHABET_SIZE);
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) (alpha - (rng.nextInt(Alphabet.MAX_ALPHABET_SIZE - size) + 1));
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertFalse(isValidChar, "Алфавит пересекает границу типа char. Символ вне алфавита. Ожидания: false.");
+	} // isValidChar_chOutsideAlphabet_returnsFalse()
+
+	/**
+	 * Алфавит включает все символы типа char. Любой случайный символ. Ожидания: true.
+	 */
+	@Test
+	public void isValidChar_maxAlphabetSize_randomCh_returnsTrue (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final Alphabet alphabet = new Alphabet(alpha, Alphabet.MAX_ALPHABET_SIZE);
+		final char ch = (char) rng.nextInt();
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertTrue(isValidChar, "Алфавит включает все символы типа char. Любой случайный символ. Ожидания: true.");
+	} // isValidChar_maxAlphabetSize_randomCh_returnsTrue()
 
 	// todo
 } // AlphabetTests

@@ -19,6 +19,10 @@ package i2p.realmagic.cipher.caesar;
  * Алфавит пересекает границу типа char. Символ внутри алфавита, после границы. Ожидания: true.
  * Алфавит пересекает границу типа char. Символ вне алфавита. Ожидания: false.
  * Алфавит включает все символы типа char. Любой случайный символ. Ожидания: true.
+ * Случайный алфавит. Символ, предшествующий первому. Ожидания: false.
+ * Случайный алфавит. Первый символ. Ожидания: true.
+ * Случайный алфавит. Последний символ. Ожидания: true.
+ * Случайный алфавит. Символ, следующий за последним. Ожидания: false.
  */
 
 import org.junit.jupiter.api.Assertions;
@@ -283,6 +287,74 @@ public class AlphabetTests {
 		// assert
 		Assertions.assertTrue(isValidChar, "Алфавит включает все символы типа char. Любой случайный символ. Ожидания: true.");
 	} // isValidChar_maxAlphabetSize_randomCh_returnsTrue()
+
+	/**
+	 * Случайный алфавит. Символ, предшествующий первому. Ожидания: false.
+	 */
+	@Test
+	public void isValidChar_chPrecedesAlpha_returnsFalse (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final int size = rng.nextInt(1, Alphabet.MAX_ALPHABET_SIZE);
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) (alpha - 1);
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertFalse(isValidChar, "Случайный алфавит. Символ, предшествующий первому. Ожидания: false.");
+	} // isValidChar_chPrecedesAlpha_returnsFalse()
+
+	/**
+	 * Случайный алфавит. Первый символ. Ожидания: true.
+	 */
+	@Test
+	public void isValidChar_alpha_returnsTrue (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final int size = rng.nextInt(1, Alphabet.MAX_ALPHABET_SIZE);
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = alpha;
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertTrue(isValidChar, "Случайный алфавит. Первый символ. Ожидания: true.");
+	} // isValidChar_alpha_returnsTrue()
+
+	/**
+	 * Случайный алфавит. Последний символ. Ожидания: true.
+	 */
+	@Test
+	public void isValidChar_omega_returnsTrue (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final int size = rng.nextInt(2, Alphabet.MAX_ALPHABET_SIZE);
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) (alpha + size - 1);
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertTrue(isValidChar, "Случайный алфавит. Последний символ. Ожидания: true.");
+	} // isValidChar_omega_returnsTrue()
+
+	/**
+	 * Случайный алфавит. Символ, следующий за последним. Ожидания: false.
+	 */
+	@Test
+	public void isValidChar_chFollowsOmega_returnFalse (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final int size = rng.nextInt(1, Alphabet.MAX_ALPHABET_SIZE);
+		final Alphabet alphabet = new Alphabet(alpha, size);
+		final char ch = (char) (alpha + size);
+		// act
+		final boolean isValidChar = alphabet.isValidChar(ch);
+		// assert
+		Assertions.assertFalse(isValidChar, "Случайный алфавит. Символ, следующий за последним. Ожидания: false.");
+	} // isValidChar_chFollowsOmega_returnFalse()
 
 	// todo
 } // AlphabetTests

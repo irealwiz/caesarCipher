@@ -33,5 +33,22 @@ public record Alphabet (
 		if ((size <= 0) || (size > MAX_ALPHABET_SIZE)) throw new IllegalArgumentException();
 	} // Alphabet()
 
+// instance methods
+
+	/**
+	 * Проверка принадлежности символа алфавиту.
+	 * <p>Метод возвращает значение {@code true}, тогда и только тогда, когда указанный символ принадлежит данному алфавиту.</p>
+	 * @param ch Проверяемый символ.
+	 * @return <ul>
+	 *     <li>{@code true} - Если указанный символ принадлежит данному алфавиту.</li>
+	 *     <li>{@code false} - В противном случае.</li>
+	 * </ul>
+	 */
+	public boolean isValidChar (
+		final char ch
+	) { // method body
+		return ((ch - alpha) & 0xffff) < size;
+	} // isValidChar()
+
 	// todo
 } // Alphabet

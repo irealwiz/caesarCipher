@@ -79,5 +79,15 @@ public record Alphabet (
 		return ((ch - alpha) & 0xffff) < size;
 	} // isValidChar()
 
+	/**
+	 * Последний символ алфавита.
+	 * <p>Метод возвращает последний символ данного алфавита.</p>
+	 * @return Последний символ алфавита.
+	 */
+	public char omega (
+	) { // method body
+		return (char) (alpha + size - 1);
+	} // omega()
+
 	// todo
 } // Alphabet

@@ -433,7 +433,7 @@ public class AlphabetTests {
 		// arrange
 		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2, Alphabet.MAX_ALPHABET_SIZE);
 		final char omega = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2);
-		final int expectedSize = Alphabet.MAX_ALPHABET_SIZE - (alpha - omega + 1);
+		final int expectedSize = Alphabet.MAX_ALPHABET_SIZE - (alpha - omega - 1);
 		// act
 		final Alphabet alphabet = Alphabet.of(alpha, omega);
 		// assert

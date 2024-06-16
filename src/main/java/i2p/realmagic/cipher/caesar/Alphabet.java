@@ -32,6 +32,23 @@ public record Alphabet (
 	 */
 	public static final int MAX_ALPHABET_SIZE = 0x1_0000;
 
+// static methods
+
+	/**
+	 * Задание алфавита первым и последним символами.
+	 * <p>Метод возвращает алфавит, заданный первым и последним символами. В результирующий алфавит входят все символы циклического диапазона типа {@code char}, от первого, до последнего включительно.</p>
+	 * @param alpha Первый символ алфавита.
+	 * @param omega Последний символ алфавита.
+	 * @return Алфавит, заданный первым и последним символами.
+	 */
+	public static Alphabet of (
+		final char alpha,
+		final char omega
+	) { // method body
+		final int size = ((omega - alpha) & 0xffff) + 1;
+		return new Alphabet(alpha, size);
+	} // of()
+
 // constructors
 
 	/**

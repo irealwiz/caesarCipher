@@ -46,6 +46,11 @@ package i2p.realmagic.cipher.caesar;
  * Первый символ следует непосредственно за последним. Ожидания: максимальный размер.
  */
 
+/*
+ Тесты метода omega():
+ * Случайный алфавит. Ожидания: возвращён последний символ.
+ */
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -455,6 +460,20 @@ public class AlphabetTests {
 		// assert
 		Assertions.assertEquals(expectedSize, alphabet.size(), "Первый символ следует непосредственно за последним. Ожидания: максимальный размер.");
 	} // of_alphaImmediatelyFollowsOmega_maxSize (()
+
+	/**
+	 * Случайный алфавит. Ожидания: возвращён последний символ.
+	 */
+	@Test
+	public void omega_randomAlphabet_expectedOmega (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final char omega = (char) rng.nextInt();
+		final Alphabet alphabet = Alphabet.of(alpha, omega);
+		// assert
+		Assertions.assertEquals(omega, alphabet.omega(), "Случайный алфавит. Ожидания: возвращён последний символ.");
+	} // omega_randomAlphabet_expectedOmega()
 
 	// todo
 } // AlphabetTests

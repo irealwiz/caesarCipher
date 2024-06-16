@@ -37,6 +37,15 @@ package i2p.realmagic.cipher.caesar;
  * Случайный алфавит. Символ, следующий за последним. Ожидания: false.
  */
 
+/*
+ Тесты метода of(char, char):
+ * Случайный алфавит. Ожидания: первый символ соответствует заданному.
+ * Первый и последний символы совпадают. Ожидания: размер алфавита равен 1.
+ * Первый символ расположен раньше последнего. Ожидания: верный размер.
+ * Первый символ расположен позже последнего. Ожидания: верный размер.
+ * Первый символ следует непосредственно за последним. Ожидания: максимальный размер.
+ */
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -367,6 +376,85 @@ public class AlphabetTests {
 		// assert
 		Assertions.assertFalse(isValidChar, "Случайный алфавит. Символ, следующий за последним. Ожидания: false.");
 	} // isValidChar_chFollowsOmega_returnFalse()
+
+	/**
+	 * Случайный алфавит. Ожидания: первый символ соответствует заданному.
+	 */
+	@Test
+	public void of_randomAlphabet_expectedAlpha (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final char omega = (char) rng.nextInt();
+		// act
+		final Alphabet alphabet = Alphabet.of(alpha, omega);
+		// assert
+		Assertions.assertEquals(alpha, alphabet.alpha(), "Случайный алфавит. Ожидания: первый символ соответствует заданному.");
+	} // of_randomAlphabet_expectedAlpha()
+
+	/**
+	 * Первый и последний символы совпадают. Ожидания: размер алфавита равен 1.
+	 */
+	@Test
+	public void of_omegaEqualAlpha_sizeIs1 (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final char omega = alpha;
+		final int expectedSize = 1;
+		// act
+		final Alphabet alphabet = Alphabet.of(alpha, omega);
+		// assert
+		Assertions.assertEquals(expectedSize, alphabet.size(), "Первый и последний символы совпадают. Ожидания: размер алфавита равен 1.");
+	} // of_omegaEqualAlpha_sizeIs1()
+
+	/**
+	 * Первый символ расположен раньше последнего. Ожидания: верный размер.
+	 */
+	@Test
+	public void of_alphaPrecedesOmega_expectedSize (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2);
+		final char omega = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2, Alphabet.MAX_ALPHABET_SIZE);
+		final int expectedSize = omega - alpha + 1;
+		// act
+		final Alphabet alphabet = Alphabet.of(alpha, omega);
+		// assert
+		Assertions.assertEquals(expectedSize, alphabet.size(), "Первый символ расположен раньше последнего. Ожидания: верный размер.");
+	} // of_alphaPrecedesOmega_expectedSize()
+
+	/**
+	 * Первый символ расположен позже последнего. Ожидания: верный размер.
+	 */
+	@Test
+	public void of_alphaFollowsOmega_expectedSize (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2, Alphabet.MAX_ALPHABET_SIZE);
+		final char omega = (char) rng.nextInt(Alphabet.MAX_ALPHABET_SIZE / 2);
+		final int expectedSize = Alphabet.MAX_ALPHABET_SIZE - (alpha - omega + 1);
+		// act
+		final Alphabet alphabet = Alphabet.of(alpha, omega);
+		// assert
+		Assertions.assertEquals(expectedSize, alphabet.size(), "Первый символ расположен позже последнего. Ожидания: верный размер.");
+	} // of_alphaFollowsOmega_expectedSize()
+
+	/**
+	 * Первый символ следует непосредственно за последним. Ожидания: максимальный размер.
+	 */
+	@Test
+	public void of_alphaImmediatelyFollowsOmega_maxSize (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt();
+		final char omega = (char) (alpha - 1);
+		final int expectedSize = Alphabet.MAX_ALPHABET_SIZE;
+		// act
+		final Alphabet alphabet = Alphabet.of(alpha, omega);
+		// assert
+		Assertions.assertEquals(expectedSize, alphabet.size(), "Первый символ следует непосредственно за последним. Ожидания: максимальный размер.");
+	} // of_alphaImmediatelyFollowsOmega_maxSize (()
 
 	// todo
 } // AlphabetTests

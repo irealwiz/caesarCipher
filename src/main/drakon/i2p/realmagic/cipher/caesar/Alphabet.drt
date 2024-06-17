@@ -1,15 +1,14 @@
 ИС Дракон © Тышов Г.Н. A
-5,,,,,01.01.2015,"Tahoma,1,10,0,0",10,,,,
-2,1,9,,,,,Запись
-36,2,60,90,,,,,,8,,,,,,,,0,
-29,3,60,207,,-19,180,19,,3,,,Описание,,,"""Алфавит текста сообщений."",,""Экземпляры класса описывают алфавит текста сообщений шифра Цезаря. При использовании шифра Цезаря, алфавит сообщений шифрованного текста совпадает с алфавитом сообщений открытого текста."",,""Алфавит образуется подмножестовом символов указанного размера, начиная с указанного первого символа, из циклически повторяющегося множества символов типа char.""",,0,
-36,4,60,556,,,,,,,,,,,,,,0,
-31,5,60,271,,-15,210,15,,4,,,"""Компоненты записи""",,,"""Описание компонентов записи.""",,0,
-30,6,60,331,,-15,180,15,,5,,,alpha,,,"""Первый символ алфавита.""",,0,
-30,7,60,391,,-15,180,15,,6,,,size,,,"""Размер алфавита.""",,0,
-31,14,60,451,,-15,180,15,,7,,,"""Поля класса""",,,,,0,
-30,15,60,511,,-15,210,15,,2,,,MAX_ALPHABET_SIZE,,,"""Максимально возможный размер алфавита."",,""Совокупное число символов типа char.""",,0,
-29,22,60,139,,-19,180,19,,1,,,COPYING,,,"""DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER."",,""This code is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version."",,""This code is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details."",,""You should have received a copy of the GNU Lesser General Public License version 3 along with this code. If not, see <https://www.gnu.org/licenses/>."",,""Copyright (C) 2024 Sergey Shpagin""",,0,
+5,,,,,01.01.2015,"Tahoma,1,10,0,0",10,"COPYING,,""DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER."",,""This file is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version."",,""This file is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details."",,""You should have received a copy of the GNU Lesser General Public License version 3 along with this file. If not, see <https://www.gnu.org/licenses/>."",,""Copyright (C) 2024 Sergey Shpagin""",,,
+2,1,8,,,,,Запись
+36,2,60,90,,,,,,1,,,,,,,,0,
+29,3,60,139,,-19,180,19,,3,,,Описание,,,"""Алфавит текста сообщений."",,""Экземпляры класса описывают алфавит текста сообщений шифра Цезаря. При использовании шифра Цезаря, алфавит сообщений шифрованного текста совпадает с алфавитом сообщений открытого текста."",,""Алфавит образуется подмножестовом символов указанного размера, начиная с указанного первого символа, из циклически повторяющегося множества символов типа char.""",,0,
+36,4,60,488,,,,,,,,,,,,,,0,
+31,5,60,203,,-15,210,15,,4,,,"""Компоненты записи""",,,"""Описание компонентов записи.""",,0,
+30,6,60,263,,-15,180,15,,5,,,alpha,,,"""Первый символ алфавита.""",,0,
+30,7,60,323,,-15,180,15,,6,,,size,,,"""Размер алфавита.""",,0,
+31,14,60,383,,-15,180,15,,7,,,"""Поля класса""",,,,,0,
+30,15,60,443,,-15,210,15,,2,,,MAX_ALPHABET_SIZE,,,"""Максимально возможный размер алфавита."",,""Совокупное число символов типа char.""",,0,
 0,23,6,,,,,"""Публичный, статический"""
 4,24,600,135,-90,-15,90,15,2,4,,,of,,,"""Задание алфавита первым и последним символами."",,""Метод возвращает алфавит, заданный первым и последним символами. В результирующий алфавит входят все символы циклического диапазона типа char, от первого, до последнего включительно.""","Постусловия:,""* Возвращён алфавит содержащий поддиапазон символов, от первого, до последнего включительно.""",0,
 5,25,600,315,-60,-15,60,15,,,,,Конец,,,"""Возвращаем созданный алфавит.""",,0,

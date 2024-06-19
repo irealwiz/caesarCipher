@@ -23,5 +23,23 @@ public record CaesarCipher (
 	Alphabet alphabet,
 	int rot
 ) { // record body
+
+// constructors
+
+	/**
+	 * Конструктор шифра Цезаря.
+	 * <p>Поскольку количество возможных сдвигов, определяется размером выбранного алфавита, а сдвиги осуществляются в циклическом диапазоне алфавита, то значение сдвига должно быть неотрицательным целым числом, меньшим размера алфавита.</p>
+	 * @param alphabet Алфавит.
+	 * @param rot Сдвиг.
+	 * @throws NullPointerException Если указанный алфавит не существует.
+	 * @throws IllegalArgumentException Если не выполнено любое из следующих условий:<ul>
+	 *     <li>Значение сдвига неотрицательно.</li>
+	 *     <li>Значение сдвига меньше размера алфавита.</li>
+	 * </ul>
+	 */
+	public CaesarCipher {
+		if ((rot >= alphabet.size()) || (rot < 0)) throw new IllegalArgumentException();
+	} // CaesarCipher()
+
 	// todo
 } // CaesarCipher

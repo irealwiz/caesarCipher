@@ -41,5 +41,25 @@ public record CaesarCipher (
 		if ((rot >= alphabet.size()) || (rot < 0)) throw new IllegalArgumentException();
 	} // CaesarCipher()
 
+// instance methods
+
+	/**
+	 * Шифрование символа.
+	 * <p>Метод зашифровывает шифром Цезаря указанный символ и возвращает результат шифрования. Зашифрованный символ символ принадлежит выбранному алфавиту.</p>
+	 * @param ch Шифруемый символ.
+	 * @return Зашифрованный символ.
+	 * @throws IllegalArgumentException Если указанный символ не входит в выбранный алфавит.
+	 */
+	public char encrypt (
+		final char ch
+	) throws IllegalArgumentException
+	{ // method body
+		if (!alphabet.isValidChar(ch)) throw new IllegalArgumentException();
+		final char alpha = alphabet.alpha();
+		final int plainChIdx = (ch - alpha) & 0xffff;
+		final int cryptChIdx = (plainChIdx + rot) % alphabet.size();
+		return (char) (alpha + cryptChIdx);
+	} // encrypt()
+
 	// todo
 } // CaesarCipher

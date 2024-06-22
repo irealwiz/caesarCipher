@@ -25,6 +25,20 @@ package i2p.realmagic.cipher.caesar;
  * Случайный сдвиг. Ожидания: сдвиг соответствует заданному.
  */
 
+/*
+ Тесты метода encrypt(char):
+ * Случайный алфавит. Символ вне алфавита. Ожидания: выброшено IAE.
+ * Случайный алфавит. Символ из алфавита. Ожидания: исключений не выброшено.
+ * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 8. Символ \uFFFD. Ожидания: возвращён символ \u0006.
+ * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 67. Символ \uFFFD. Ожидания: возвращён символ \uFFC1.
+ * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 9. Символ \u003C. Ожидания: возвращён символ \uFFC6.
+ * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 123. Символ \u003C. Ожидания: возвращён символ \u0038.
+ * Случайный алфавит. Сдвиг 0. Случайный символ. Ожидания: возвращён тот же символ.
+ * Алфавит a-z. Сдвиг 25. Случайный символ, кроме a. Ожидания: возвращён предшествующий указанному символ.
+ * Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из p-z.
+ * Алфавит a-z. Сдвиг 13. Символ из n-z. Ожидания: возвращён соответствующий символ из a-m.
+ */
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -203,6 +217,170 @@ public class CaesarCipherTests {
 		final CaesarCipher cipher = cipherSupplier.get();
 		Assertions.assertEquals(cipherSupplier.rot(), cipher.rot(), "Случайный сдвиг. Ожидания: сдвиг соответствует заданному.");
 	} // constructor_randomValidRot_sameRot()
+
+	/**
+	 * Случайный алфавит. Символ вне алфавита. Ожидания: выброшено IAE.
+	 */
+	@Test
+	public void encrypt_randomAlphabet_chOutOfAlphabet_throwsIAE (
+	) { // method body
+		final CaesarCipher cipher = cipherSupplier.get();
+		final char ch = (char) (cipher.alphabet().alpha() - 1);
+		Assertions.assertThrows(IllegalArgumentException.class, () -> cipher.encrypt(ch), "Случайный алфавит. Символ вне алфавита. Ожидания: выброшено IAE.");
+	} // encrypt_randomAlphabet_chOutOfAlphabet_throwsIAE()
+
+	/**
+	 * Случайный алфавит. Символ из алфавита. Ожидания: исключений не выброшено.
+	 */
+	@Test
+	public void encrypt_randomAlphabet_chOfAlphabet_doesNotThrow (
+	) { // method body
+		final CaesarCipher cipher = cipherSupplier.get();
+		final char ch = (char) (cipher.alphabet().alpha() + rng.nextInt(cipher.alphabet().size()));
+		Assertions.assertDoesNotThrow(() -> cipher.encrypt(ch), "Случайный алфавит. Символ из алфавита. Ожидания: исключений не выброшено.");
+	} // encrypt_randomAlphabet_chOfAlphabet_doesNotThrow()
+
+	/**
+	 * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 8. Символ \uFFFD. Ожидания: возвращён символ \u0006.
+	 */
+	@Test
+	public void encrypt_alphabet128_rot8_chUFFFD_returnsU0006 (
+	) { // method body
+		// arrange
+		final Alphabet alphabet = new Alphabet('\uFFC0', 128);
+		final int rot = 8;
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final char ch = '\uFFFD';
+		final char expected = '\u0006';
+		// act
+		final char real = cipher.encrypt(ch);
+		// assert
+		Assertions.assertEquals(expected, real, "Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 8. Символ \\uFFFD. Ожидания: возвращён символ \\u0006.");
+	} // encrypt_alphabet128_rot8_chUFFFD_returnsU0006()
+
+	/**
+	 * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 67. Символ \uFFFD. Ожидания: возвращён символ \uFFC1.
+	 */
+	@Test
+	public void encrypt_alphabet128_rot67_chUFFFD_returnsUFFC1 (
+	) { // method body
+		// arrange
+		final Alphabet alphabet = new Alphabet('\uFFC0', 128);
+		final int rot = 67;
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final char ch = '\uFFFD';
+		final char expected = '\uFFC1';
+		// act
+		final char real = cipher.encrypt(ch);
+		// assert
+		Assertions.assertEquals(expected, real, "Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 67. Символ \\uFFFD. Ожидания: возвращён символ \\uFFC1.");
+	} // encrypt_alphabet128_rot67_chUFFFD_returnsUFFC1()
+
+	/**
+	 * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 9. Символ \u003C. Ожидания: возвращён символ \uFFC6.
+	 */
+	@Test
+	public void encrypt_alphabet128_rot9_chU003C_returnsUFFC6 (
+	) { // method body
+		// arrange
+		final Alphabet alphabet = new Alphabet('\uFFC0', 128);
+		final int rot = 9;
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final char ch = '\u003C';
+		final char expected = '\uFFC6';
+		// act
+		final char real = cipher.encrypt(ch);
+		// assert
+		Assertions.assertEquals(expected, real, "Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 9. Символ \\u003C. Ожидания: возвращён символ \\uFFC6.");
+	} // encrypt_alphabet128_rot9_chU003C_returnsUFFC6()
+
+	/**
+	 * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 123. Символ \u003C. Ожидания: возвращён символ \u0038.
+	 */
+	@Test
+	public void encrypt_alphabet128_rot123_chU003C_returnsU0038 (
+	) { // method body
+		// arrange
+		final Alphabet alphabet = new Alphabet('\uFFC0', 128);
+		final int rot = 123;
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final char ch = '\u003C';
+		final char expected = '\u0038';
+		// act
+		final char real = cipher.encrypt(ch);
+		// assert
+		Assertions.assertEquals(expected, real, "Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 123. Символ \\u003C. Ожидания: возвращён символ \\u0038.");
+	} // encrypt_alphabet128_rot123_chU003C_returnsU0038()
+
+	/**
+	 * Случайный алфавит. Сдвиг 0. Случайный символ. Ожидания: возвращён тот же символ.
+	 */
+	@Test
+	public void encrypt_randomAlphabet_zeroRot_randomCh_sameCh (
+	) { // method body
+		// arrange
+		final int zeroRot = 0;
+		final CaesarCipher cipher = new CaesarCipher(validAlphabet, zeroRot);
+		final char plainCh = (char) (validAlphabet.alpha() + rng.nextInt(validAlphabet.size()));
+		// act
+		final char cryptCh = cipher.encrypt(plainCh);
+		// assert
+		Assertions.assertEquals(plainCh, cryptCh, "Случайный алфавит. Сдвиг 0. Случайный символ. Ожидания: возвращён тот же символ.");
+	} // encrypt_randomAlphabet_zeroRot_randomCh_sameCh()
+
+	/**
+	 * Алфавит a-z. Сдвиг 25. Случайный символ, кроме a. Ожидания: возвращён предшествующий указанному символ.
+	 */
+	@Test
+	public void encrypt_alphabetAZ_rot25_randomCh_precedingChar (
+	) { // method body
+		// arrange
+		final Alphabet alphabet = Alphabet.of('a', 'z');
+		final int rot = 25;
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final char plainCh = (char) rng.nextInt('a', 'z' + 1);
+		final char expectedCipherCh = (char) (plainCh - 1);
+		// act
+		final char cipherCh = cipher.encrypt(plainCh);
+		// assert
+		Assertions.assertEquals(expectedCipherCh, cipherCh, "Алфавит a-z. Сдвиг 25. Случайный символ, кроме a. Ожидания: возвращён предшествующий указанному символ.");
+	} // encrypt_alphabetAZ_rot25_randomCh_precedingChar()
+
+	/**
+	 * Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из p-z.
+	 */
+	@Test
+	public void encrypt_alphabetAZ_rot11_chAO_charPZ (
+	) { // method body
+		// arrange
+		final Alphabet alphabet = Alphabet.of('a', 'z');
+		final int rot = 11;
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final char plainCh = (char) rng.nextInt('a', 'o' + 1);
+		final char expectedCipherCh = (char) (plainCh + rot);
+		// act
+		final char cipherCh = cipher.encrypt(plainCh);
+		// assert
+		Assertions.assertEquals(expectedCipherCh, cipherCh, "Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из p-z.");
+	} // encrypt_alphabetAZ_rot11_chAO_charPZ()
+
+	/**
+	 * Алфавит a-z. Сдвиг 13. Символ из n-z. Ожидания: возвращён соответствующий символ из a-m.
+	 */
+	@Test
+	public void encrypt_alphabetAZ_rot13_chNZ_charAM (
+	) { // method body
+		// arrange
+		final Alphabet alphabet = Alphabet.of('a', 'z');
+		final int rot = 13;
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final char plainCh = (char) rng.nextInt('n', 'z' + 1);
+		final char expectedCipherCh = (char) (plainCh - rot);
+		// act
+		final char cipherCh = cipher.encrypt(plainCh);
+		// assert
+		Assertions.assertEquals(expectedCipherCh, cipherCh, "Алфавит a-z. Сдвиг 13. Символ из n-z. Ожидания: возвращён соответствующий символ из a-m.");
+	} // encrypt_alphabetAZ_rot13_chNZ_charAM()
 
 	// todo
 } // CaesarCipherTests

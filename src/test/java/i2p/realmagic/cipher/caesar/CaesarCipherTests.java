@@ -464,8 +464,8 @@ public class CaesarCipherTests {
 		final Alphabet alphabet = new Alphabet('\uFFC0', 128);
 		final int rot = 9;
 		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
-		final char ch = '\u003C';
-		final char expected = '\uFFC5';
+		final char ch = '\uFFC5';
+		final char expected = '\u003C';
 		// act
 		final char real = cipher.decrypt(ch);
 		// assert

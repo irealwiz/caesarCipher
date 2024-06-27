@@ -35,7 +35,7 @@ package i2p.realmagic.cipher.caesar;
  * Алфавит в 128 символов пересекает границу типа char, в равных пропорциях. Сдвиг 123. Символ \u003C. Ожидания: возвращён символ \u0037.
  * Случайный алфавит. Сдвиг 0. Случайный символ. Ожидания: возвращён тот же символ.
  * Алфавит a-z. Сдвиг 25. Случайный символ, кроме a. Ожидания: возвращён предшествующий указанному символ.
- * Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из p-z.
+ * Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из l-z.
  * Алфавит a-z. Сдвиг 13. Символ из n-z. Ожидания: возвращён соответствующий символ из a-m.
  */
 
@@ -352,7 +352,7 @@ public class CaesarCipherTests {
 		final Alphabet alphabet = Alphabet.of('a', 'z');
 		final int rot = 25;
 		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
-		final char plainCh = (char) rng.nextInt('a', 'z' + 1);
+		final char plainCh = (char) (rng.nextInt('a', 'z') + 1);
 		final char expectedCipherCh = (char) (plainCh - 1);
 		// act
 		final char cipherCh = cipher.encrypt(plainCh);
@@ -361,10 +361,10 @@ public class CaesarCipherTests {
 	} // encrypt_alphabetAZ_rot25_randomCh_precedingChar()
 
 	/**
-	 * Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из p-z.
+	 * Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из l-z.
 	 */
 	@Test
-	public void encrypt_alphabetAZ_rot11_chAO_charPZ (
+	public void encrypt_alphabetAZ_rot11_chAO_charLZ (
 	) { // method body
 		// arrange
 		final Alphabet alphabet = Alphabet.of('a', 'z');
@@ -375,8 +375,8 @@ public class CaesarCipherTests {
 		// act
 		final char cipherCh = cipher.encrypt(plainCh);
 		// assert
-		Assertions.assertEquals(expectedCipherCh, cipherCh, "Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из p-z.");
-	} // encrypt_alphabetAZ_rot11_chAO_charPZ()
+		Assertions.assertEquals(expectedCipherCh, cipherCh, "Алфавит a-z. Сдвиг 11. Символ из a-o. Ожидания: возвращён соответствующий символ из l-z.");
+	} // encrypt_alphabetAZ_rot11_chAO_charLZ()
 
 	/**
 	 * Алфавит a-z. Сдвиг 13. Символ из n-z. Ожидания: возвращён соответствующий символ из a-m.

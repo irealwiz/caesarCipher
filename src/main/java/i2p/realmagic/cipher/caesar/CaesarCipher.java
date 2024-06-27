@@ -61,5 +61,24 @@ public record CaesarCipher (
 		return (char) (alpha + cryptChIdx);
 	} // encrypt()
 
+	/**
+	 * Расшифровывание символа.
+	 * <p>Метод расшифровывает зашифрованный шифром Цезаря символ и возвращает результат расшифровки. Расшифрованный символ символ принадлежит выбранному алфавиту.</p>
+	 * @param ch Зашифрованный символ.
+	 * @return Расшифрованный символ.
+	 * @throws IllegalArgumentException Если указанный символ не входит в выбранный алфавит.
+	 */
+	public char decrypt (
+		final char ch
+	) throws IllegalArgumentException
+	{ // method body
+		if (!alphabet.isValidChar(ch)) throw new IllegalArgumentException();
+		final char alpha = alphabet.alpha();
+		final int size = alphabet.size();
+		final int cryptChIdx = (ch - alpha) & 0xffff;
+		final int plainChIdx = (cryptChIdx + size - rot) % size;
+		return (char) (alpha + plainChIdx);
+	} // decrypt()
+
 	// todo
 } // CaesarCipher

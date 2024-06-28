@@ -24,6 +24,14 @@ public record CaesarCipher (
 	int rot
 ) { // record body
 
+// static fields
+
+	/**
+	 * Шифр ROT13.
+	 * <p>Алфавит содержит символы от &apos;a&apos; до &apos;z&apos;. Сдвиг равен 13.</p>
+	 */
+	public static final CaesarCipher ROT13 = new CaesarCipher(Alphabet.of('a', 'z'), 13);
+
 // constructors
 
 	/**

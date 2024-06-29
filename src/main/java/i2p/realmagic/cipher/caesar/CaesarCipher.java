@@ -88,5 +88,32 @@ public record CaesarCipher (
 		return (char) (alpha + plainChIdx);
 	} // decrypt()
 
+	/**
+	 * Шифрование строки.
+	 * <p>Метод зашифровывает шифром Цезаря указанную строку символов и возвращает результат шифрования.</p>
+	 * @param plainText Шифруемая строка символов.
+	 * @return Зашифрованная строка символов.
+	 * @throws NullPointerException Если указанная строка не существует.
+	 * @throws IllegalArgumentException Если любой из символов указанной строки не входит в выбранный алфавит.
+	 */
+	public String encrypt (
+		final String plainText
+	) throws NullPointerException,
+		IllegalArgumentException
+	{ // method body
+		final char alpha = alphabet.alpha();
+		final int size = alphabet.size();
+		final int len = plainText.length();
+		final char[] cipherText = new char[len];
+		for (int i = 0; i < len; i++) {
+			final char plainCh = plainText.charAt(i);
+			if (!alphabet.isValidChar(plainCh)) throw new IllegalArgumentException();
+			final int plainChIdx = (plainCh - alpha) & 0xffff;
+			final int cipherChIdx = (plainChIdx + rot) % size;
+			cipherText[i] = (char) (alpha + cipherChIdx);
+		} // for
+		return String.valueOf(cipherText);
+	} // encrypt()
+
 	// todo
 } // CaesarCipher

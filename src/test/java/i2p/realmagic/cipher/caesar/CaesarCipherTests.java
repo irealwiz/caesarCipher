@@ -63,6 +63,16 @@ package i2p.realmagic.cipher.caesar;
  * Шифр ROT13. Открытый текст: "png". Шифротекст: "cat".
  */
 
+/*
+ Тесты метода decrypt(String):
+ * Шифротекст не существует. Ожидания: выброшено NPE.
+ * Шифротекст содержит символ не входящий в алфавит. Ожидания: выброшено IAE.
+ * Алфавит пересекает границу типа char. Случайная строка. Ожидания: возвращено ожидаемое значение.
+ * Случайный шифр. Случайная строка. Ожидания: возвращено ожидаемое значение.
+ * Шифр ROT13. Шифротекст: "or". Открытый текст: "be".
+ * Шифр ROT13. Шифротекст: "green". Открытый текст: "terra".
+ */
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -177,6 +187,26 @@ public class CaesarCipherTests {
 		} // for
 		return cipherText.toString();
 	} // charByCharEncryption()
+
+	/**
+	 * Расшифровывание указанной строки символ за символом.
+	 * @param cipher Используемый шифр Цезаря.
+	 * @param cipherText Шифротекст.
+	 * @return Открытый текс.
+	 */
+	private static String charByCharDecryption (
+		final CaesarCipher cipher,
+		final String cipherText
+	) { // method body
+		final int len = cipherText.length();
+		final StringBuilder plainText = new StringBuilder(len);
+		for (int i = 0; i < len; i++) {
+			final char cipherCh = cipherText.charAt(i);
+			final char plainCh = cipher.decrypt(cipherCh);
+			plainText.append(plainCh);
+		} // for
+		return plainText.toString();
+	} // charByCharDecryption()
 
 // constructors
 
@@ -706,6 +736,99 @@ public class CaesarCipherTests {
 		// assert
 		Assertions.assertEquals(expectedCipherText, cipherText, "Шифр ROT13. Открытый текст: \"png\". Шифротекст: \"cat\".");
 	} // encrypt_rot13_plainTextPng_cipherTextCat()
+
+	/**
+	 * Шифротекст не существует. Ожидания: выброшено NPE.
+	 */
+	@Test
+	public void decrypt_nullCipherText_throwsNPE (
+	) { // method body
+		final CaesarCipher cipher = cipherSupplier.get();
+		Assertions.assertThrows(NullPointerException.class, () -> cipher.decrypt(null), "Шифротекст не существует. Ожидания: выброшено NPE.");
+	} // decrypt_nullCipherText_throwsNPE()
+
+	/**
+	 * Шифротекст содержит символ не входящий в алфавит. Ожидания: выброшено IAE.
+	 */
+	@Test
+	public void decrypt_cipherTextContainsOutOfAlphabetCharacter_throwsIAE (
+	) { // method body
+		// arrange
+		final CaesarCipher cipher = cipherSupplier.get();
+		final StringBuilder cipherText = new StringBuilder(genRandomString(rng, cipher.alphabet(), 128));
+		final char invalidChar = (char) (cipher.alphabet().alpha() - 1);
+		cipherText.setCharAt(rng.nextInt(cipherText.length()), invalidChar);
+		// assert
+		Assertions.assertThrows(IllegalArgumentException.class, () -> cipher.decrypt(cipherText.toString()), "Шифротекст содержит символ не входящий в алфавит. Ожидания: выброшено IAE.");
+	} // decrypt_cipherTextContainsOutOfAlphabetCharacter_throwsIAE()
+
+	/**
+	 * Алфавит пересекает границу типа char. Случайная строка. Ожидания: возвращено ожидаемое значение.
+	 */
+	@Test
+	public void decrypt_alphabetCrossesCharBound_randomCipherText_validPlainText (
+	) { // method body
+		// arrange
+		final char alpha = (char) rng.nextInt(-64, 0);
+		final char omega = (char) rng.nextInt(64);
+		final Alphabet alphabet = Alphabet.of(alpha, omega);
+		final int rot = rng.nextInt(1, alphabet.size());
+		final CaesarCipher cipher = new CaesarCipher(alphabet, rot);
+		final String cipherText = genRandomString(rng, alphabet, 2048);
+		final String expectedPlainText = charByCharDecryption(cipher, cipherText);
+		// act
+		final String plainText = cipher.decrypt(cipherText);
+		// assert
+		Assertions.assertEquals(expectedPlainText, plainText, "Алфавит пересекает границу типа char. Случайная строка. Ожидания: возвращено ожидаемое значение.");
+	} // decrypt_alphabetCrossesCharBound_randomCipherText_validPlainText()
+
+	/**
+	 * Случайный шифр. Случайная строка. Ожидания: возвращено ожидаемое значение.
+	 */
+	@Test
+	public void decrypt_randomCipher_randomCipherText_validPlainText (
+	) { // method body
+		// arrange
+		final CaesarCipher cipher = cipherSupplier.get();
+		final String srcPlainText = genRandomString(rng, cipher.alphabet(), 2048);
+		final String cipherText = cipher.encrypt(srcPlainText);
+		// act
+		final String plainText = cipher.decrypt(cipherText);
+		// assert
+		Assertions.assertEquals(srcPlainText, plainText, "Случайный шифр. Случайная строка. Ожидания: возвращено ожидаемое значение.");
+	} // decrypt_randomCipher_randomCipherText_validPlainText()
+
+	/**
+	 * Шифр ROT13. Шифротекст: &quot;or&quot;. Открытый текст: &quot;be&quot;.
+	 */
+	@Test
+	public void decrypt_rot13_cipherTextOr_plainTextBe (
+	) { // method body
+		// arrange
+		final CaesarCipher cipher = CaesarCipher.ROT13;
+		final String cipherText = "or";
+		final String expectedPlainText = "be";
+		// act
+		final String plainText = cipher.decrypt(cipherText);
+		// assert
+		Assertions.assertEquals(expectedPlainText, plainText, "Шифр ROT13. Шифротекст: \"or\". Открытый текст: \"be\".");
+	} // decrypt_rot13_cipherTextOr_plainTextBe()
+
+	/**
+	 * Шифр ROT13. Шифротекст: &quot;green&quot;. Открытый текст: &quot;terra&quot;.
+	 */
+	@Test
+	public void decrypt_rot13_cipherTextGreen_plainTextTerra (
+	) { // method body
+		// arrange
+		final CaesarCipher cipher = CaesarCipher.ROT13;
+		final String cipherText = "green";
+		final String expectedPlainText = "terra";
+		// act
+		final String plainText = cipher.decrypt(cipherText);
+		// assert
+		Assertions.assertEquals(expectedPlainText, plainText, "Шифр ROT13. Шифротекст: \"green\". Открытый текст: \"terra\".");
+	} // decrypt_rot13_cipherTextGreen_plainTextTerra()
 
 	// todo
 } // CaesarCipherTests

@@ -115,5 +115,33 @@ public record CaesarCipher (
 		return String.valueOf(cipherText);
 	} // encrypt()
 
+	/**
+	 * Расшифровывание строки.
+	 * <p>Метод расшифровывает строку, зашифрованную шифром Цезаря и возвращает полученный открытый текст.</p>
+	 * @param cipherText Расшифровываемая строка символов.
+	 * @return Открытый текст.
+	 * @throws NullPointerException Если указанная строка не существует.
+	 * @throws IllegalArgumentException Если любой из символов указанной строки не входит в выбранный алфавит.
+	 */
+	public String decrypt (
+		final String cipherText
+	) throws NullPointerException,
+		IllegalArgumentException
+	{ // method body
+		final char alpha = alphabet.alpha();
+		final int size = alphabet.size();
+		final int len = cipherText.length();
+		final char[] plainText = new char[len];
+		final int reverseRot = size - rot;
+		for (int i = 0; i < len; i++) {
+			final char cipherCh = cipherText.charAt(i);
+			if (!alphabet.isValidChar(cipherCh)) throw new IllegalArgumentException();
+			final int cipherChIdx = (cipherCh - alpha) & 0xffff;
+			final int plainChIdx = (cipherChIdx + reverseRot) % size;
+			plainText[i] = (char) (alpha + plainChIdx);
+		} // for
+		return String.valueOf(plainText);
+	} // decrypt()
+
 	// todo
 } // CaesarCipher

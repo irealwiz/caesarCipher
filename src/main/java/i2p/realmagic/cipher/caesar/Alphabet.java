@@ -89,5 +89,4 @@ public record Alphabet (
 		return (char) (alpha + size - 1);
 	} // omega()
 
-	// todo
 } // Alphabet

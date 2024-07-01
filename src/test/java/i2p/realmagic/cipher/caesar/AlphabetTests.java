@@ -475,5 +475,4 @@ public class AlphabetTests {
 		Assertions.assertEquals(omega, alphabet.omega(), "Случайный алфавит. Ожидания: возвращён последний символ.");
 	} // omega_randomAlphabet_expectedOmega()
 
-	// todo
 } // AlphabetTests

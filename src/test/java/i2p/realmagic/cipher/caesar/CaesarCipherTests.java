@@ -830,5 +830,4 @@ public class CaesarCipherTests {
 		Assertions.assertEquals(expectedPlainText, plainText, "Шифр ROT13. Шифротекст: \"green\". Открытый текст: \"terra\".");
 	} // decrypt_rot13_cipherTextGreen_plainTextTerra()
 
-	// todo
 } // CaesarCipherTests

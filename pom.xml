@@ -6,7 +6,7 @@
 
 	<groupId>i2p.realmagic</groupId>
 	<artifactId>caesar-cipher</artifactId>
-	<version>0.0.0</version>
+	<version>1.0.0</version>
 	<description>Шифр Цезаря</description>
 
 	<properties>
@@ -70,11 +70,8 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${plugins.maven-javadoc-plugin.version}</version>
 				<configuration>
-					<links>
-						<link>file:///tmp/jdk</link>
-					</links>
 					<detectLinks>false</detectLinks>
-					<show>private</show>
+					<show>public</show>
 				</configuration>
 			</plugin>
 		</plugins>
